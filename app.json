@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "Finans",
-    "slug": "finance-app",
+    "slug": "expenseease",
     "version": "1.1.8",
     "orientation": "portrait",
     "icon": "./src/assets/icon.png",
@@ -15,9 +15,7 @@
       "fallbackToCacheTimeout": 0,
       "url": "https://u.expo.dev/752d9743-e7cd-4faf-b1a0-e6f9a43a91d9"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true
     },
@@ -36,8 +34,9 @@
     },
     "extra": {
       "eas": {
-        "projectId": "b2d33006-747c-4356-9acc-b412125da563"
+        "projectId": "f568cb65-4f3f-4303-9d2f-ce5fe2687050"
       }
-    }
+    },
+    "owner": "mishita"
   }
 }

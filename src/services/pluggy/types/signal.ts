@@ -1,5 +1,4 @@
 export type Signal = {
-    score: number;
-    explanation?: string;
-  };
-  
+  score: number;
+  explanation?: string;
+};

@@ -1,43 +1,48 @@
+// src/components/Authentication/index.tsx
 import * as LocalAuthentication from 'expo-local-authentication';
 import React, { useCallback, useEffect, useState } from 'react';
 import Text from '../Text';
 import { AuthButton, Container, SpashImage } from './styles';
+import { useAuth } from '../../contexts/AuthContext';
 
 export type AuthenticateProps = {
   children: React.ReactNode;
 };
 
 const AuthenticationProvider: React.FC<AuthenticateProps> = ({ children }) => {
+  const { user, loading } = useAuth();
   const [isAuthenticated, setAuthenticated] = useState(false);
-
-  const authenticationRoutine = useCallback(async () => {
-    const isAuthenticated = __DEV__ || (await authenticate());
-    setAuthenticated(isAuthenticated);
-  }, []);
 
   const authenticate = async () => {
     const authTypes = await LocalAuthentication.supportedAuthenticationTypesAsync();
-
-    if (!authTypes) {
-      return true;
-    }
+    if (!authTypes) return true;
 
     try {
       const result = await LocalAuthentication.authenticateAsync({
-        promptMessage: 'Unlock your phone',
+        promptMessage: 'Unlock your app',
       });
-
       return result.success;
     } catch (error) {
       return false;
     }
   };
 
-  useEffect(() => {
-    authenticationRoutine();
-  }, [authenticationRoutine]);
+  const authenticationRoutine = useCallback(async () => {
+    if (user) {
+      const isAuthenticated = __DEV__ || (await authenticate());
+      setAuthenticated(isAuthenticated);
+    }
+  }, [user]);
 
-  return isAuthenticated ? (
+  useEffect(() => {
+    if (!loading) {
+      authenticationRoutine();
+    }
+  }, [authenticationRoutine, loading]);
+
+  if (loading) return null;
+
+  return user && isAuthenticated ? (
     <>{children}</>
   ) : (
     <Container>

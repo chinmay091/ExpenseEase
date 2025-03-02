@@ -35,22 +35,32 @@ const CameraScreen: React.FC = () => {
         'eng', // Change this to your desired language
         {
           logger: (info) => console.log(info), // Log progress
-        }
-      ).then(({ data: { text } }) => {
-        setOcrText(text);
-      }).catch((error) => {
-        console.error('OCR error:', error);
-        setOcrText('Error recognizing text');
-      });
+        },
+      )
+        .then(({ data: { text } }) => {
+          setOcrText(text);
+        })
+        .catch((error) => {
+          console.error('OCR error:', error);
+          setOcrText('Error recognizing text');
+        });
     }
   };
 
   if (hasPermission === null) {
-    return <View><Text>Requesting for camera permission</Text></View>;
+    return (
+      <View>
+        <Text>Requesting for camera permission</Text>
+      </View>
+    );
   }
 
   if (hasPermission === false) {
-    return <View><Text>No access to camera</Text></View>;
+    return (
+      <View>
+        <Text>No access to camera</Text>
+      </View>
+    );
   }
 
   return (
@@ -58,9 +68,7 @@ const CameraScreen: React.FC = () => {
       <Camera style={styles.camera} ref={setCameraRef}>
         <View style={styles.buttonContainer}>
           <Button title="Take Picture" onPress={takePicture} />
-          {imageUri && (
-            <Image source={{ uri: imageUri }} style={styles.capturedImage} />
-          )}
+          {imageUri && <Image source={{ uri: imageUri }} style={styles.capturedImage} />}
           {ocrText ? (
             <Text style={styles.text}>{ocrText}</Text>
           ) : (

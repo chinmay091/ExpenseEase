@@ -53,7 +53,9 @@ export const mapPlaidConnector = (institution: any): Connector => ({
   imageUrl: institution.logo || undefined,
   type: 'PERSONAL_BANK', // Default, but can be refined based on the institution
   countries: institution.country_codes,
-  products: institution.products.filter((product: string) => PRODUCT_TYPES.includes(product as ProductType)) as ProductType[],
+  products: institution.products.filter((product: string) =>
+    PRODUCT_TYPES.includes(product as ProductType),
+  ) as ProductType[],
   health: {
     status: 'ONLINE', // Plaid does not provide real-time health, defaulting to "ONLINE"
     stage: institution.is_beta ? 'BETA' : null,

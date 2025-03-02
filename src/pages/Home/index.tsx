@@ -10,6 +10,10 @@ import {
   RefreshControl,
   ScrollView,
   UIManager,
+  Button,
+  Text,
+  View,
+  TouchableOpacity,
 } from 'react-native';
 import { useTheme } from 'styled-components/native';
 import FlexContainer from '../../components/FlexContainer';
@@ -18,10 +22,10 @@ import HorizontalBar from '../../components/HorizontalBar';
 import Money from '../../components/Money';
 import MonthYearPicker from '../../components/MonthYearPicker';
 import ScreenContainer from '../../components/ScreenContainer';
-import Text from '../../components/Text';
 import TransactionListItem from '../../components/TransactionListItem';
-import AddTransactionButton from '../../\components/AddTransactionButton/AddTransactionButton';
+import AddTransactionButton from '../../components/AddTransactionButton/AddTransactionButton';
 import AppContext from '../../contexts/AppContext';
+import { useAuth } from '../../contexts/AuthContext';
 import { checkCurrentMonth, formatMonthYearDate, NOW } from '../../utils/date';
 import {
   BalanceContainer,
@@ -47,20 +51,30 @@ if (Platform.OS === 'android') {
 }
 
 const Home: React.FC = () => {
+  const formatMonthYearDate = (value: Moment): string => {
+    return value.format('MMMM YYYY');
+  };
+
+  const { user, logout } = useAuth();
+  const userName = user?.displayName || 'User';
   const [monthYearPickerOpened, setMonthYearPickerOpened] = useState(false);
   const [transactionListCapacity, setTransactionListCapacity] = useState(0);
+  const [headerTitle, setHeaderTitle] = useState(formatMonthYearDate(NOW)); 
+  const [showUserDropdown, setShowUserDropdown] = useState(false);
 
   const theme = useTheme();
   const navigation = useNavigation();
 
+  const toggleUserDropdown = () => {
+    setShowUserDropdown((prev) => !prev); // <-- NEW
+  };
+
   const {
     isLoading,
-    hideValues,
     date,
     setDate,
     minimumDateWithData,
     lastUpdateDate,
-    setHideValues,
     updateItems,
     fetchItems,
     transactions,
@@ -74,8 +88,6 @@ const Home: React.FC = () => {
   const isCurrentMonth = checkCurrentMonth(date);
 
   const balance = totalIncomes - totalExpenses;
-
-  const showTrendingIcon = !hideValues && balance !== 0;
 
   const incomesBarGrow = totalIncomes >= totalExpenses ? 1 : totalIncomes / totalExpenses;
   const expensesBarGrow = totalExpenses >= totalIncomes ? 1 : totalExpenses / totalIncomes;
@@ -107,8 +119,10 @@ const Home: React.FC = () => {
 
   const handleMonthYearPickerChange = (value: Moment) => {
     animatedChangeDate(value);
+    setHeaderTitle(formatMonthYearDate(value));
     setMonthYearPickerOpened(false);
   };
+  
 
   const handleRefreshPage = () => {
     Alert.alert(
@@ -134,6 +148,27 @@ const Home: React.FC = () => {
     );
   };
 
+  const handleLogout = async () => {
+    Alert.alert(
+      "Are you sure?",
+      "Do you really want to log out?",
+      [
+        {
+          text: "No",
+          onPress: () => console.log("Cancel logout"),
+          style: "cancel",
+        },
+        {
+          text: "Yes",
+          onPress: async () => {
+            await logout();
+          },
+        },
+      ],
+      { cancelable: true }
+    );
+  };
+  
   return (
     <ScreenContainer>
       <ScrollView
@@ -147,11 +182,12 @@ const Home: React.FC = () => {
         contentContainerStyle={{ flexGrow: 1, overflow: 'hidden' }}
       >
         <TopContainer>
-          {/* Neumorphic Button */}
-          {/* <AddTransaction /> */}
           <Header
-            title={formatMonthYearDate(date)}
+            userIcon ='account-circle'
+            userName={userName}
+            title={headerTitle} 
             titleIcon="expand-more"
+            onUserPress={toggleUserDropdown}
             onTitlePress={() => setMonthYearPickerOpened(true)}
             actions={[
               {
@@ -160,12 +196,14 @@ const Home: React.FC = () => {
                 hidden: isCurrentMonth,
               },
               {
-                icon: hideValues ? 'visibility-off' : 'visibility',
-                onPress: () => setHideValues(!hideValues),
-              },
+                icon: 'logout',
+                onPress: handleLogout,
+                title: 'logout',
+              }
             ]}
-            hideGoBackIcon={true}
           />
+
+
           {isCurrentMonth && (
             <BalanceContainer>
               <Text variant="light" color="textWhite">
@@ -212,17 +250,6 @@ const Home: React.FC = () => {
               <Text variant="title">Summary of the month</Text>
               <SeeMoreButton text="View history" onPress={() => navigation.navigate('history')} />
             </SectionHeader>
-            <BalanceWithTreding>
-              <Text>
-                Balance: <Money value={balance} variant="default-bold" />
-              </Text>
-              {showTrendingIcon &&
-                (balance > 0 ? (
-                  <MaterialIcons name="trending-up" color={theme.colors.income} size={16} />
-                ) : (
-                  <MaterialIcons name="trending-down" color={theme.colors.error} size={16} />
-                ))}
-            </BalanceWithTreding>
             <FlexContainer gap={12}>
               <Text variant="default-bold">Entries</Text>
               <HorizontalBarContainer>
@@ -254,6 +281,7 @@ const Home: React.FC = () => {
           </TransactionListContainer>
         </BottomSheet>
       </ScrollView>
+
       <MonthYearPicker
         isOpen={monthYearPickerOpened}
         selectedDate={date}
@@ -265,5 +293,6 @@ const Home: React.FC = () => {
     </ScreenContainer>
   );
 };
+
 
 export default Home;

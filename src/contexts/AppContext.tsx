@@ -4,9 +4,32 @@ import React, { createContext, useCallback, useEffect, useMemo, useState } from 
 import Toast from 'react-native-toast-message';
 import LoadingModal from '../components/LoadingModal';
 import { usePlaidService } from '../hooks/useplaidService';
-import { Account, AuthResponse, Category, Common, Connector, Deserialized, Execution, Identity, Index, Investment, Item, Opportunity, Transaction, Validation, Webhook } from '../services/plaid/types';
+import {
+  Account,
+  AuthResponse,
+  Category,
+  Common,
+  Connector,
+  Deserialized,
+  Execution,
+  Identity,
+  Index,
+  Investment,
+  Item,
+  Opportunity,
+  Transaction,
+  Validation,
+  Webhook,
+} from '../services/plaid/types';
 import { range } from '../utils/array';
-import { CURRENCY_CODES, CurrencyCode, COUNTRY_CODES, CountryCode, PageResponse, PageFilters } from '../services/pluggy/types';
+import {
+  CURRENCY_CODES,
+  CurrencyCode,
+  COUNTRY_CODES,
+  CountryCode,
+  PageResponse,
+  PageFilters,
+} from '../services/pluggy/types';
 import {
   ItemsAsyncStorageKey,
   LastUpdateDateFormat,
@@ -125,7 +148,7 @@ export const AppContextProvider: React.FC<{ children: React.ReactNode }> = ({ ch
             statusDetail: 'Fetched successfully',
             accounts,
           } as Item;
-        })
+        }),
       );
       setItems(itemsWithDetails);
     } catch (error) {

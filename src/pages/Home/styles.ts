@@ -68,3 +68,4 @@ export const SeeMoreButton = styled(TextButton).attrs({
 export const TransactionListContainer = styled(FlexContainer).attrs({ gap: 24 })`
   flex: 1;
 `;
+

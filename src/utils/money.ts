@@ -9,8 +9,10 @@ export const formatMoney = ({ value, absolute, hidden }: FormatMoneyProps) => {
     return '••••••••';
   }
 
-  return (absolute ? Math.abs(value) : value)
-    .toFixed(2)
-    .replace('.', ',')
-    .replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.');
+  const amount = absolute ? Math.abs(value) : value;
+
+  return new Intl.NumberFormat('en-IN', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }).format(amount);
 };

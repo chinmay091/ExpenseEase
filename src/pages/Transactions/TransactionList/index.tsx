@@ -88,7 +88,6 @@ const TransactionList: React.FC<TransactionListProps> = ({
           colors={[theme.colors.primary]}
         />
       }
-      
       data={transactions}
       renderItem={renderItem}
       keyExtractor={(item) => item.id}

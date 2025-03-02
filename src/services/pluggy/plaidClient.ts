@@ -1,11 +1,5 @@
 import { BaseApi } from './baseApi';
-import {
-  Account,
-  Investment,
-  Item,
-  Transaction,
-  Identity,
-} from './types';
+import { Account, Investment, Item, Transaction, Identity } from './types';
 import { Liabilities } from './types/liabilities';
 import { Statement } from './types/statements';
 import { Income } from './types/income';
@@ -15,12 +9,14 @@ import { TransactionFilters } from './types/transactionsRefresh';
 import { AssetReport } from './types/assetReport';
 import { RecurringTransactions } from './types/recurringTransactions';
 
-import { CURRENCY_CODES,
+import {
+  CURRENCY_CODES,
   CurrencyCode,
   COUNTRY_CODES,
   CountryCode,
   PageResponse,
-  PageFilters } from './types';
+  PageFilters,
+} from './types';
 
 export class PlaidClient extends BaseApi {
   // No need to declare accessToken here
@@ -28,8 +24,14 @@ export class PlaidClient extends BaseApi {
   async createLinkToken(userId: string) {
     return this.postRequest<{ link_token: string }>(
       '/link/token/create',
-      { user: { client_user_id: userId }, client_name: 'Your App', products: ['transactions'], country_codes: ['US'], language: 'en' },
-      false
+      {
+        user: { client_user_id: userId },
+        client_name: 'Your App',
+        products: ['transactions'],
+        country_codes: ['US'],
+        language: 'en',
+      },
+      false,
     );
   }
 
@@ -37,7 +39,7 @@ export class PlaidClient extends BaseApi {
     const response = await this.postRequest<{ access_token: string; item_id: string }>(
       '/item/public_token/exchange',
       { public_token: publicToken },
-      false
+      false,
     );
 
     // Store the access token for future requests
@@ -60,7 +62,11 @@ export class PlaidClient extends BaseApi {
     return this.postRequest<{ item: Item }>('/item/get', {});
   }
 
-  async fetchTransactions(startDate: string, endDate: string, options: Omit<TransactionFilters, 'start_date' | 'end_date'> = {}) {
+  async fetchTransactions(
+    startDate: string,
+    endDate: string,
+    options: Omit<TransactionFilters, 'start_date' | 'end_date'> = {},
+  ) {
     this.ensureAccessToken();
     return this.postRequest<{ transactions: Transaction[] }>('/transactions/get', {
       start_date: startDate,
@@ -85,21 +91,31 @@ export class PlaidClient extends BaseApi {
   }
 
   async initiatePayment(paymentInitiation: PaymentInitiation) {
-    return this.postRequest<{ payment_id: string }>('/payment_initiation/payment/create', paymentInitiation);
+    return this.postRequest<{ payment_id: string }>(
+      '/payment_initiation/payment/create',
+      paymentInitiation,
+    );
   }
 
   async fetchAssetReport(assetReportToken: string) {
-    return this.postRequest<{ asset_report: AssetReport }>('/asset_report/get', { asset_report_token: assetReportToken });
+    return this.postRequest<{ asset_report: AssetReport }>('/asset_report/get', {
+      asset_report_token: assetReportToken,
+    });
   }
 
   async signalFraudDetection(transactionId: string) {
     this.ensureAccessToken();
-    return this.postRequest<{ signal_decision: Signal }>('/signal/evaluate', { transaction_id: transactionId });
+    return this.postRequest<{ signal_decision: Signal }>('/signal/evaluate', {
+      transaction_id: transactionId,
+    });
   }
 
   async fetchRecurringTransactions() {
     this.ensureAccessToken();
-    return this.postRequest<{ recurring_transactions: RecurringTransactions }>('/transactions/recurring/get', {});
+    return this.postRequest<{ recurring_transactions: RecurringTransactions }>(
+      '/transactions/recurring/get',
+      {},
+    );
   }
 
   async fetchStatements() {

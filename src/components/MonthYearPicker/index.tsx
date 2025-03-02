@@ -1,4 +1,3 @@
-
 import { MaterialIcons } from '@expo/vector-icons';
 import moment, { Moment, monthsShort } from 'moment';
 import React, { useState } from 'react';

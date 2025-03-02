@@ -108,9 +108,7 @@ export const PlaidServiceContextProvider: React.FC<{ children: ReactNode }> = ({
   const plaidService = usePlaidService(); // Get service methods from usePlaidService hook
 
   return (
-    <PlaidServiceContext.Provider value={plaidService}>
-      {children}
-    </PlaidServiceContext.Provider>
+    <PlaidServiceContext.Provider value={plaidService}>{children}</PlaidServiceContext.Provider>
   );
 };
 
