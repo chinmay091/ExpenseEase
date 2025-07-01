@@ -1,5 +1,5 @@
 <h1 align="center">
-  <div><img height="164" src="src/assets/adaptive-icon.png"></img><div>
+  <div><img height="164" src="src/assets/adaptive-icon2.png"></img><div>
   Finans
 </h1>
 
