@@ -3,7 +3,7 @@
   Finans
 </h1>
 
-<p align="center">An Smart Personal Finance mobile app built using React Native and Expo.</p>
+<p align="center">A Smart Personal Finance mobile app built using React Native and Expo.</p>
 
 ## About
 
