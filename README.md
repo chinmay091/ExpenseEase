@@ -1,6 +1,6 @@
 <h1 align="center">
   <div><img height="164" src="src/assets/adaptive-icon2.png"></img><div>
-  Finans
+  ExpenseEase
 </h1>
 
 <p align="center">A Smart Personal Finance mobile app built using React Native and Expo.</p>
